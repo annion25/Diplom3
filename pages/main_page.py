@@ -5,8 +5,6 @@ from seletools.actions import drag_and_drop
 import settings
 from data import AccountServiceData
 from pages.base_page import BasePage
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 
 
@@ -30,7 +28,8 @@ class MainPage(BasePage):
     FIRST_ORDER_IN_LIST = (By.XPATH, '//li[1][contains(@class, "OrderHistory")]')
     MODAL_ORDER_DETAILS = (By.XPATH, '//div[contains(@class, "Modal_orderBox")]')
     MODAL_ORDER_TEXT = (By.XPATH, '//p[contains(@class, "text_type") and text() = "Состав"]')
-    CLOSE_MODAL_ORDER_BUTTON = (By.XPATH, '//button[contains(@class, "Modal_modal__close_modified__3V5XS")]')
+    CLOSE_MODAL_ORDER_BUTTON = (By.XPATH,
+                                '//section[contains(@class,"Modal_modal_opened")]//button[contains(@class,"Modal_modal__close_modified")]')
     CLOSE_MODAL_ORDER_BUTTON_TWO = (By.XPATH, '//svg[contains(@xmlns, "http")]')
     ORDER_NUMBER_CREATED = (By.XPATH, '//h2[contains(@class, "Modal_modal__title")]')
     ORDERS_BIG_LIST = (By.XPATH, '//p[contains(@class, "text text_type")]')
@@ -55,13 +54,10 @@ class MainPage(BasePage):
         button = self.wait_and_find_element(self.CONSTRUCTOR_BUTTON)
         button.click()
 
-
-
     @allure.step('Нажать кнопку Лента Заказов')
     def orderlist_button_click(self):
         button = self.wait_and_find_element(self.ORDERS_LIST_BUTTON)
         button.click()
-
 
     @allure.step('Нажать кнопку Соус')
     def sause_button_click(self):
@@ -72,7 +68,6 @@ class MainPage(BasePage):
     def close_button_click(self):
         button = self.wait_and_find_element(self.MODAL_DETAILES_CLOSE_BUTTON)
         button.click()
-
 
     @allure.step('Проверяем редирект на главную')
     def check_main_page(self):
@@ -148,18 +143,13 @@ class MainPage(BasePage):
         self.wait_and_find_element(self.MODAL_WINDOW_ORDER_CREATED)
         self.wait_and_find_element(self.MODAL_WINDOW_ORDER_CREATED_TEXT)
         self.wait_and_find_clickable_element(self.CLOSE_MODAL_ORDER_BUTTON)
-        time.sleep(5)
         order_number = self.wait_and_find_element(self.ORDER_NUMBER_CREATED)
         order_number_text = order_number.text
         self.wait_and_find_clickable_element(self.CLOSE_MODAL_ORDER_BUTTON)
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "Modal_modal__close_modified__3V5XS"))
-        )
-        WebDriverWait(self.driver, 100).until(EC.element_to_be_clickable((self.CLOSE_MODAL_ORDER_BUTTON)))
+        self.wait_and_find_visible_element(self.CLOSE_MODAL_ORDER_BUTTON)
         self.find_button()
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((self.ORDERS_LIST_BUTTON)))
+        self.wait_and_find_clickable_element(self.ORDERS_LIST_BUTTON)
         list_orders_button = self.wait_and_find_clickable_element(self.ORDERS_LIST_BUTTON)
-        time.sleep(5)
         list_orders_button.click()
         orders_list = self.wait_and_find_element(self.ORDERS_BIG_LIST).text
 
@@ -170,18 +160,13 @@ class MainPage(BasePage):
         self.wait_and_find_element(self.MODAL_WINDOW_ORDER_CREATED)
         self.wait_and_find_element(self.MODAL_WINDOW_ORDER_CREATED_TEXT)
         self.wait_and_find_clickable_element(self.CLOSE_MODAL_ORDER_BUTTON)
-        #time.sleep(1)
         order_number = self.wait_and_find_element(self.ORDER_NUMBER_CREATED)
         order_number_text = order_number.text
         self.wait_and_find_clickable_element(self.CLOSE_MODAL_ORDER_BUTTON)
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "Modal_modal__close_modified__3V5XS"))
-        )
-        WebDriverWait(self.driver, 100).until(EC.element_to_be_clickable((self.CLOSE_MODAL_ORDER_BUTTON)))
+        self.wait_and_find_visible_element(self.CLOSE_MODAL_ORDER_BUTTON)
         self.find_button()
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((self.ORDERS_LIST_BUTTON)))
         list_orders_button = self.wait_and_find_clickable_element(self.ORDERS_LIST_BUTTON)
-        time.sleep(0.09)
+        self.wait_and_find_visible_element(self.ORDERS_LIST_BUTTON)
         list_orders_button.click()
         order_in_work = self.wait_and_find_element(self.ORDER_IN_WORK)
         order_in_work_num = order_in_work.text
@@ -193,18 +178,12 @@ class MainPage(BasePage):
         self.wait_and_find_element(self.MODAL_WINDOW_ORDER_CREATED)
         self.wait_and_find_element(self.MODAL_WINDOW_ORDER_CREATED_TEXT)
         self.wait_and_find_clickable_element(self.CLOSE_MODAL_ORDER_BUTTON)
-        time.sleep(5)
-        order_number = self.wait_and_find_element(self.ORDER_NUMBER_CREATED)
-        order_number_text = order_number.text
+        self.wait_and_find_element(self.ORDER_NUMBER_CREATED)
         self.wait_and_find_clickable_element(self.CLOSE_MODAL_ORDER_BUTTON)
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.CLASS_NAME, "Modal_modal__close_modified__3V5XS"))
-        )
-        WebDriverWait(self.driver, 100).until(EC.element_to_be_clickable((self.CLOSE_MODAL_ORDER_BUTTON)))
+        self.wait_and_find_visible_element(self.CLOSE_MODAL_ORDER_BUTTON)
         self.find_button()
-        WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable((self.ORDERS_LIST_BUTTON)))
         self.wait_and_find_clickable_element(self.ORDERS_LIST_BUTTON)
-        time.sleep(5)
+        self.wait_and_find_visible_element(self.ORDERS_LIST_BUTTON)
 
     @allure.step("Проверяем, что количество заказов после создания заказа увеличилось")
     def check_amount(self, amount_1, amount_2):
